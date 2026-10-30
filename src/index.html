@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>JS CPU</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<div class="top-bar">ForestCPU</div>
+	<div class="left-side">
+		<select id="language-select">
+			<option value="assembly">Assembly</option>
+			<option disabled>More to be done, hopefully!</option>
+		</select>
+		<textarea id="code-input" placeholder="Type some code here..." resi></textarea>
+		<button id="exec-btn">Compile and execute!</button>
+	</div>
+	<div class="right-side">
+		<b>Memory view</b>
+		<p id="memory-view">View not available</p>
+		<b>Storage view</b>
+		<p id="storage-view">View not available</p>
+		<b>Program view</b>
+		<div class="program-view">
+			<p id="pc-view"><b>PC</b>: View not available</p>
+			<b>Registers</b>
+			<div id="register-view">
+				<p>View not available</p>
+			</div>
+
+			<b>Instructions</b>
+			<p id="instruction-view">View not available</p>
+		</div>
+		<b>Clock speed</b>
+		<p id="clock-speed-view">View not available</p>
+		<input type="range" id="clock-speed" min="0" max="1000" value="0" />
+		<input type="number" placeholder="Type a clock speed here..." id="clock-speed-typed" min="0" max="1000" value="0"/>
+		<small>(0 means unlimited)</small>
+	</div>
+
+	<script src="cpu/modules/protoplus.js"></script>
+	<script src="cpu/errors.js"></script>
+	<script src="cpu/processor.js"></script>
+	<script src="cpu/compiler.js"></script>
+	<script src="ui/ui.js"></script>
+	<script src="demos/loader.js"></script>
+</body>
+
+</html>
