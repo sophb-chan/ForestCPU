@@ -2,7 +2,7 @@ const availableDemos = [
 	'calc',
 	'compiler',
 	'test',
-]
+];
 async function loadDemo(selectedDemo) {
 	if (!availableDemos.includes(selectedDemo))
 		throw new ReferenceError('Demo not found: ' + selectedDemo);
