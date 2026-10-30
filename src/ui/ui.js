@@ -35,7 +35,7 @@ const execListener = () => {
 	try {
 		switch (languageSelect.value) {
 			case 'assembly':
-				const compiled = compileFile(codeInput.value, CPU);
+					const compiled = compileFile(codeInput.value, CPU);
 				console.log('Compiled output:', compiled);
 				CPU.loadProgram(...compiled);
 

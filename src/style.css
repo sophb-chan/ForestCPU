@@ -47,21 +47,41 @@ input {
 
 	display: flex;
 	flex-direction: row;
+	align-items: center;
 	justify-content: center;
+	gap: 1;
 
 	width: 100%;
 	height: calc(5% - 6px);
 
 	background: #464;
 	padding-top: 4px;
-	border-bottom: solid 1px #52ff4c;
+	border-bottom: solid 1px #898;
 	border-radius: 0px 0px 8px 8px;
 	z-index: 1;
 }
 
 .top-bar .title {
 	position: fixed;
-	left: 0;
+	left: 16px;
+}
+
+.top-bar button,
+.top-bar select {
+	background: #0000;
+	border: dashed 1px #aba;
+	border-top: none;
+	border-bottom: none;
+	border-radius: 0 !important;
+}
+
+.top-bar button:hover,
+.top-bar select:hover {
+	background: #fff1;
+	border: solid 1px #aca;
+	border-top: none;
+	border-bottom: none;
+	border-radius: 0 !important;
 }
 
 /* =============== UI sides =============== */
