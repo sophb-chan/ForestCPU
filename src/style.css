@@ -59,6 +59,11 @@ input {
 	z-index: 1;
 }
 
+.top-bar .title {
+	position: fixed;
+	left: 0;
+}
+
 /* =============== UI sides =============== */
 
 .left-side,
