@@ -70,7 +70,8 @@ input {
 	width: 50%;
 	height: 95%;
 	text-align: center;
-	overflow-y: scroll;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 .left-side {
