@@ -5,7 +5,8 @@ const execBtn = document.getElementById('exec-btn'),
 	registerView = document.getElementById('register-view'),
 	clockSpeedView = document.getElementById('clock-speed-view'),
 	clockSpeedSlider = document.getElementById('clock-speed'),
-	clockSpeedInput = document.getElementById('clock-speed-typed');
+	clockSpeedInput = document.getElementById('clock-speed-typed'),
+	loadDemoBtn = document.getElementById('load-demo');
 
 
 codeInput.focus();
@@ -15,6 +16,16 @@ codeInput.addEventListener('keydown', e => {
 		execListener();
 });
 
+loadDemoBtn.addEventListener('mouseup', () => {
+	const demo = prompt(`Select a demo to load:\n"${availableDemos.join('", "')}"`)
+	if (!demo) {
+		console.log('Interaction cancelled');
+		return;
+	}
+
+	loadDemo(demo);
+	alert(`Loaded demo "${demo}"`);
+});
 
 const clockSpeedListener = e => {
 	const clockSpeed = parseInt(e.target.value);
