@@ -224,7 +224,7 @@ function parseTokens(tokens, processor, loggingLevel = 0) {
 	Lconsole.setLevelName(3, "verbose");
 
 	// get architecture
-	const architecture = processor.exportArchitecture().architecture;
+	const architecture = processor.exportArchitecture();
 
 	// parse
 	const output = [];

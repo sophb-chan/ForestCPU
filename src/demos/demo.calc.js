@@ -34,15 +34,10 @@ globalThis.CPU = (() => {
 	CPU.createInstruction({
 		fn({
 			operands,
-			registers,
 			setRegister,
 			CPU,
 		} = {}) {
-			const sum =
-				registers[CPU.registerNames[operands[0]]]
-				+
-				registers[CPU.registerNames[operands[1]]];
-
+			const sum = operands[0] + operands[1];
 			setRegister('X', sum);
 		},
 		name: 'add',
@@ -53,14 +48,10 @@ globalThis.CPU = (() => {
 		operations: [
 			({
 				operands,
-				registers,
 				CPU,
 				$InstructionShared,
 			} = {}) => {
-				const diff =
-					registers[CPU.registerNames[operands[0]]]
-					-
-					registers[CPU.registerNames[operands[1]]];
+				const diff = operands[0] - operands[1];
 				$InstructionShared.diff = diff;
 			},
 			({

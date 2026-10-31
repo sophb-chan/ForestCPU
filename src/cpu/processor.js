@@ -99,7 +99,7 @@ class Processor {
 				info: v,
 			})),
 			lock: this.#locked,
-		});
+		}).architecture
 	}
 
 	// =============== Registers =============== //
