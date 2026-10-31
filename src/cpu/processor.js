@@ -280,7 +280,7 @@ class Processor {
 		};
 	}
 	#instructionShared = {}
-	async runInstruction(opcode, operands, waitFor) {
+	async runInstruction(opcode, operands, debug) {
 		const instruction = this.instructionSet[opcode];
 		if (instruction == null)
 			throw new ExecutionError(`Invalid instruction opcode ${opcode}`);
@@ -293,13 +293,20 @@ class Processor {
 			// the instruction operation is unsplit
 			waitTime *= instruction.ticks ?? 1;
 
-			const result = instruction.fn(instructionInput);
+			instruction.fn(instructionInput);
 			if (debug) console.debug('Waiting for', waitTime, 'ms');
-			await waitFor(waitTime); // Wait for next clock tick(s)
+			const endProfiling = waitTime ? this.#profileTime('Unsplit instruction fn exec', waitTime) : () => { };
+			await this.#waitFor(waitTime); // Wait for next clock tick(s)
+			endProfiling();
 		} else if (!instruction.fn && instruction.operations) {
+			let i = 0;
 			for (const operation of instruction.operations) {
 				operation(instructionInput);
-				await waitFor(waitTime);
+				if (debug) console.debug(`Operation ${i}: Waiting ${waitTime} ms`);
+				const endProfiling = waitTime ? this.#profileTime('Split instruction op exec', waitTime) : () => { };
+				await this.#waitFor(waitTime);
+				endProfiling();
+				i++;
 			}
 		} else {
 			// idk yet
@@ -307,32 +314,6 @@ class Processor {
 	}
 	async runProgram(callbacks = {}, debug) {
 		if (this.#loadedProgram.length === 0) return;
-
-		function createWaitWorker() {
-			const waitWorkerCode = `
-				self.onmessage = function(e) {
-					const delay = e.data;
-					const start = performance.now();
-
-					while (performance.now() - start < delay) {};
-
-					self.postMessage("done");
-				};
-			`,
-				waitWorkerBlob = new Blob([waitWorkerCode], { type: 'application/javascript' }),
-				waitWorkerURL = URL.createObjectURL(waitWorkerBlob),
-				waitWorker = new Worker(waitWorkerURL);
-			return waitWorker;
-		};
-		const waitWorker = createWaitWorker(); // Create worker outside of function for faster execution
-		function waitFor(ms) {
-			if (ms === 0) return new Promise(r => r());
-
-			return new Promise((resolve) => {
-				waitWorker.onmessage = () => resolve();
-				waitWorker.postMessage(ms);
-			});
-		}
 
 		// Fill in missing callbacks
 		const requiredCallbacks = [
@@ -393,12 +374,59 @@ class Processor {
 
 			const instructionObject = this.#getInstructionInput(operands, this.#instructionShared);
 			callbacks.instructionStart(instructionObject);
-			lastInstructionOutput = await this.runInstruction(opcode, operands, waitFor);
+			lastInstructionOutput = await this.runInstruction(opcode, operands);
 			callbacks.instructionExecEnd(instructionObject);
 
 			this.#PC += 1 + instruction.operands * 2;
 			callbacks.instructionClockEnd(instructionObject);
 		}
 		return lastInstructionOutput;
+	}
+
+	// =============== Helpers =============== //
+	#profileTime(operationName, intendedTime) {
+		const start = performance.now();
+		return () => {
+			const end = performance.now(), offset = end - start;
+			if (intendedTime == null) {
+				console.debug(`[Profiler] ${operationName
+					? `Operation "${operationName}"`
+					: 'Unnamed operation'
+					} took ${offset}ms`);
+			} else if (offset !== intendedTime) {
+				console.warn(`[Profiler] ${operationName
+					? `Operation "${operationName}"`
+					: 'Unnamed operation'
+					} took ${offset}ms, meanwhile it was intended to take ${intendedTime}ms. Accuracy error of ${offset - intendedTime}ms.`);
+			}
+		}
+	}
+	#createWaitWorker() {
+		function createWaitWorker() {
+			const waitWorkerCode = `
+				self.onmessage = function(e) {
+					const delay = e.data;
+					const start = performance.now();
+
+					while (performance.now() - start < delay) {};
+
+					self.postMessage("done");
+				};
+			`,
+				waitWorkerBlob = new Blob([waitWorkerCode], { type: 'application/javascript' }),
+				waitWorkerURL = URL.createObjectURL(waitWorkerBlob),
+				waitWorker = new Worker(waitWorkerURL);
+			return waitWorker;
+		};
+	}
+	#waitWorker = this.#createWaitWorker(); // Create the wait worker outside of waitFor for faster execton
+	#waitFor(ms) {
+		if (ms === 0) return new Promise(r => r());
+
+		const waitWorker = this.#waitWorker;
+		return new Promise(r => {
+			waitWorker.onmessage = r;
+			waitWorker.postMessage(ms);
+		});
 	}
 }
