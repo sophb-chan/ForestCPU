@@ -51,4 +51,4 @@ execBtn.addEventListener('mousedown', () => {
 		else
 			alert(`Exception!\nRawThrow: ${JSON.stringify(err)}`);
 	}
-};);
+});
