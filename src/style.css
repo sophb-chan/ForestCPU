@@ -3,6 +3,7 @@ body {
 	margin: 0;
 	width: 100vw;
 	height: 100vh;
+	overflow: hidden;
 }
 
 /* =============== General styling =============== */
@@ -139,11 +140,6 @@ input {
 }
 
 /* =============== Overlay menu =============== */
-.overlay-menu.hidden {
-	display: none;
-	transform: translate(-50%, -50%) rotateY(90deg);
-	opacity: 0;
-}
 .overlay-menu {
 	background: #454a;
 	backdrop-filter: blur(4px);
@@ -155,11 +151,16 @@ input {
 	left: 50%;
 	transform: translate(-50%, -50%);
 
+	display: revert;
 	width: 90%;
 	height: 90%;
 
 	z-index: 2;
-	transition: all .5s ease;
+	transition: transform 1s ease;
+}
+.overlay-menu.hidden {
+	transform: translate(-50%, -50%) rotateX(90deg) rotateY(90deg);
+	transition: transform .5s ease;
 }
 
 .overlay-menu #tabs {
@@ -168,12 +169,12 @@ input {
 	left: 0;
 
 	display: flex;
-		flex-direction: column;
+	flex-direction: column;
 	height: calc(100% - 32px);
 	width: 30%;
 	border-right: solid 1px #898;
 	}
-	
+
 	.overlay-menu #tabs .tab {
 		text-align: right;
 		background: none;
@@ -183,11 +184,11 @@ input {
 		border-bottom: dashed 1px #898;
 		height: 32px;
 	}
-	
+
 	.overlay-menu #tabs .tab:hover {
 		background: #fff1;
 	}
-	
+
 	.overlay-menu #tabs .tab:active {
 		background: #fff2;
 }
@@ -201,17 +202,17 @@ input {
 	width: 70%;
 	margin: -8px;
 	}
-	
+
 	.overlay-menu #header {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 		justify-content: center;
-	
+
 		font-weight: bold;
 		font-style: italic;
 		text-align: center;
-	
+
 		height: 32px;
 		border-bottom: solid 1px #898;
 }
