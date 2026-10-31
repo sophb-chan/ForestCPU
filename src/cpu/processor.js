@@ -280,12 +280,30 @@ class Processor {
 		};
 	}
 	#instructionShared = {}
-	runInstruction(opcode, operands) {
+	async runInstruction(opcode, operands, waitFor) {
 		const instruction = this.instructionSet[opcode];
 		if (instruction == null)
 			throw new ExecutionError(`Invalid instruction opcode ${opcode}`);
 
-		return instruction.fn(this.#getInstructionInput(operands, this.#instructionShared));
+		let waitTime = 1e3 / this.#clockSpeed; // Pre-compute instruction wait time
+		const instructionInput = this.#getInstructionInput(operands, this.#instructionShared); // Pre-compute instruction input
+
+		if (instruction.fn) {
+			// Multiply wait time by ticks ONLY if
+			// the instruction operation is unsplit
+			waitTime *= instruction.ticks ?? 1;
+
+			const result = instruction.fn(instructionInput);
+			if (debug) console.debug('Waiting for', waitTime, 'ms');
+			await waitFor(waitTime); // Wait for next clock tick(s)
+		} else if (!instruction.fn && instruction.operations) {
+			for (const operation of instruction.operations) {
+				operation(instructionInput);
+				await waitFor(waitTime);
+			}
+		} else {
+			// idk yet
+		}
 	}
 	async runProgram(callbacks = {}, debug) {
 		if (this.#loadedProgram.length === 0) return;
@@ -306,11 +324,9 @@ class Processor {
 				waitWorker = new Worker(waitWorkerURL);
 			return waitWorker;
 		};
+		const waitWorker = createWaitWorker(); // Create worker outside of function for faster execution
 		function waitFor(ms) {
 			if (ms === 0) return new Promise(r => r());
-
-			// Allows for precise sub-millisecond waits
-			const waitWorker = createWaitWorker();
 
 			return new Promise((resolve) => {
 				waitWorker.onmessage = () => resolve();
@@ -377,12 +393,9 @@ class Processor {
 
 			const instructionObject = this.#getInstructionInput(operands, this.#instructionShared);
 			callbacks.instructionStart(instructionObject);
-			lastInstructionOutput = this.runInstruction(opcode, operands);
+			lastInstructionOutput = await this.runInstruction(opcode, operands, waitFor);
 			callbacks.instructionExecEnd(instructionObject);
 
-			const waitTime = (1e3 / this.#clockSpeed) * (instruction.ticks ?? 1);
-			if (debug) console.debug('Waiting for', waitTime, 'ms');
-			await waitFor(waitTime); // Wait for next clock tick(s)
 			this.#PC += 1 + instruction.operands * 2;
 			callbacks.instructionClockEnd(instructionObject);
 		}
