@@ -29,16 +29,18 @@ execBtn.addEventListener('mousedown', () => {
 					registerView.append(registerElement);
 				}
 
+				function updateView({
+					PC,
+					registers,
+				}) {
+					PCview.innerHTML = `<b>PC</b>: ${PC}`;
+					for (const [registerName, value] of Object.entries(registers))
+						document.getElementById(`register-${registerName}-view`).innerHTML =
+							`<b>${registerName}</b>: ${value}`;
+				};
 				CPU.runProgram({
-					instructionClockEnd({
-						PC,
-						registers,
-					}) {
-						PCview.innerHTML = `<b>PC</b>: ${PC}`;
-						for (const [registerName, value] of Object.entries(registers))
-							document.getElementById(`register-${registerName}-view`).innerHTML =
-								`<b>${registerName}</b>: ${value}`;
-					}
+					instructionClockStart: updateView,
+					instructionClockEnd: updateView,
 				});
 				break;
 
