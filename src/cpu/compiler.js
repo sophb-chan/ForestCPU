@@ -47,7 +47,7 @@ const tokenRules = {
 	},
 	*/
 	INSTRUCTION: {
-		pattern: /^(\b[a-z][a-z0-9]*)((?:[\t ](?:[$%][a-z0-9]+|0b[01]+|[1-9]\d*|\d))*)?/i,
+		pattern: /^(\b[a-z][a-z0-9]*)((?:[\t ](?:\$[a-z0-9]+|0b[01]+|[1-9]\d*|\d|%[a-z0-9]+))*)?/i,
 		groupTokens: ["MNEMONIC", "OPERANDS"],
 	},
 };
