@@ -139,6 +139,11 @@ input {
 }
 
 /* =============== Overlay menu =============== */
+.overlay-menu.hidden {
+	display: none;
+	transform: translate(-50%, -50%) rotateY(90deg);
+	opacity: 0;
+}
 .overlay-menu {
 	background: #454a;
 	backdrop-filter: blur(4px);
@@ -154,6 +159,7 @@ input {
 	height: 90%;
 
 	z-index: 2;
+	transition: all .5s ease;
 }
 
 .overlay-menu #tabs {
@@ -161,9 +167,29 @@ input {
 	bottom: 0;
 	left: 0;
 
+	display: flex;
+		flex-direction: column;
 	height: calc(100% - 32px);
 	width: 30%;
-	border-right: dashed 1px #898;
+	border-right: solid 1px #898;
+	}
+	
+	.overlay-menu #tabs .tab {
+		text-align: right;
+		background: none;
+		border: none;
+		border-radius: 0px;
+		transition: none;
+		border-bottom: dashed 1px #898;
+		height: 32px;
+	}
+	
+	.overlay-menu #tabs .tab:hover {
+		background: #fff1;
+	}
+	
+	.overlay-menu #tabs .tab:active {
+		background: #fff2;
 }
 
 .overlay-menu #content {
@@ -173,4 +199,19 @@ input {
 
 	height: calc(100% - 32px);
 	width: 70%;
+	margin: -8px;
+	}
+	
+	.overlay-menu #header {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	
+		font-weight: bold;
+		font-style: italic;
+		text-align: center;
+	
+		height: 32px;
+		border-bottom: solid 1px #898;
 }
