@@ -47,7 +47,7 @@ const tokenRules = {
 	},
 	*/
 	INSTRUCTION: {
-		pattern: /^(\b[a-z][a-z0-9]*)((?:[\t ](?:\$[a-z0-9]+|0b[01]+|[1-9]\d*|\d|%[a-z0-9]+))*)?/i,
+		pattern: /^(\b[a-z][a-z0-9]*)((?:[\t ](?:0x[a-z0-9]+|0b[01]+|0o[0-7]+|[1-9]\d*|\d|%[a-z0-9]+))*)?/i,
 		groupTokens: ["MNEMONIC", "OPERANDS"],
 	},
 };
@@ -80,10 +80,20 @@ const tokenHandlers = {
 							r => r.toLowerCase()
 						).indexOf(operand.slice(1).toLowerCase())
 					);
-				else if (operand.startsWith('$'))
+				else if (operand.startsWith('0x'))
 					output.push(
 						0,
-						parseInt(operand.slice(1), 16)
+						parseInt(operand.slice(2), 16)
+					);
+				else if (operand.startsWith('0o'))
+					output.push(
+						0,
+						parseInt(operand.slice(2), 8)
+					);
+				else if (operand.startsWith('0b'))
+					output.push(
+						0,
+						parseInt(operand.slice(2), 1)
 					);
 				else
 					output.push(
