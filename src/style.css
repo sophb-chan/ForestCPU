@@ -12,6 +12,7 @@ body {
 	text-shadow: 0px 0px 6px #efea;
 	color: #efe;
 	font-size: 16px;
+	corner-shape: squircle;
 }
 
 small {
@@ -35,7 +36,6 @@ input {
 	background: #232;
 	border: solid 1px #787;
 	border-radius: 8px;
-	corner-shape: squircle;
 	transition: all .5s ease-in;
 }
 
@@ -136,4 +136,41 @@ input {
 
 #register-view * {
 	font-family: monospace;
+}
+
+/* =============== Overlay menu =============== */
+.overlay-menu {
+	background: #454a;
+	backdrop-filter: blur(4px);
+	border-radius: 32px;
+	overflow: hidden;
+
+	position: relative;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	width: 90%;
+	height: 90%;
+
+	z-index: 2;
+}
+
+.overlay-menu #tabs {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+
+	height: calc(100% - 32px);
+	width: 30%;
+	border-right: dashed 1px #898;
+}
+
+.overlay-menu #content {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+
+	height: calc(100% - 32px);
+	width: 70%;
 }
