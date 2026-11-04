@@ -9,11 +9,11 @@
 </head>
 
 <body>
-	<div class="top-bar">
+	<div id="top-bar">
 		<p class="title">ForestCPU</p>
 		<button id="load-demo">Load demo</button>
 	</div>
-	<div class="left-side">
+	<div id="left-side">
 		<select id="language-select">
 			<option value="assembly">Assembly</option>
 			<option disabled>More to be done, hopefully!</option>
@@ -21,7 +21,7 @@
 		<textarea id="code-input" placeholder="Type some code here..." resi></textarea>
 		<button id="exec-btn">Compile and execute!</button>
 	</div>
-	<div class="right-side">
+	<div id="right-side">
 		<b>Memory view</b>
 		<p id="memory-view">View not available</p>
 		<b>Storage view</b>
@@ -43,7 +43,7 @@
 		<input type="number" placeholder="Type a clock speed here..." id="clock-speed-typed" min="0" max="1000" value="0"/>
 		<small>(0 means unlimited)</small>
 	</div>
-	<div class="overlay-menu hidden">
+	<div id="overlay-menu class=" hidden">
 		<div id="header">Header</div>
 		<div id="tabs">
 			<button class="tab">Filler Tab 1</button>
